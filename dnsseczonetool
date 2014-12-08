@@ -83,7 +83,7 @@
 #		 All zone name must be lowercase.
 #
 # Usage:
-#        
+#
 #   1. Generate KSK and ZSK
 #       dnsseczonetool keygen zone(s)
 #
@@ -121,12 +121,12 @@
 #  http://www.nlnetlabs.nl/projects/ldns/
 #  http://www.nlnetlabs.nl/projects/nsd/
 #
-#  ldns-signzone does not support unixtime serial number generaton and some 
+#  ldns-signzone does not support unixtime serial number generaton and some
 #  pseudo definitions ($TTL? $ORIGIN?).
 #  Change serial number field as _SERIAL_ at SOA RR in your zone file.
 #  $ZONE_PREPROCESS command (=sed) will change _SERIAL_ as unixtime.
 #
-#  Suppose LDNS and NSD are installed in /usr/local. 
+#  Suppose LDNS and NSD are installed in /usr/local.
 #  To use LDNS and NSD with unixtime serial generation,
 #  add following entries in your dnsseczonetool.conf file.
 #
@@ -137,7 +137,7 @@
 #  UNIXTIME=`date +%s`
 #  ZONE_PREPROCESS="sed s/_SERIAL_/$UNIXTIME/"
 #  RELOADALL_COMMAND="/usr/local/sbin/nsdc rebuild && /usr/local/sbin/nsdc reload"
-#    
+#
 
 #
 # Copyright (c) 2009-2013 Kazunori Fujiwara <fujiwara@wide.ad.jp>.
@@ -176,8 +176,8 @@ rndc="/usr/local/sbin/rndc"
 MASTERDIR="/etc/namedb/master"
 RNDC_OPTION="-k $MASTERDIR/rndc.key"
 
-KSK_PARAM="-n zone -a RSASHA1 -b 2048 -f ksk"
-ZSK_PARAM="-n zone -a RSASHA1 -b 1024"
+KSK_PARAM="-n zone -a RSASHA256 -b 2048 -f ksk"
+ZSK_PARAM="-n zone -a RSASHA256 -b 1024"
 SIGN_PARAM="-N unixtime"
 DS_PARAM="-2"
 ZONE_PREPROCESS="cat"
@@ -197,7 +197,9 @@ if [ "$1" = "" -a "$DEFAULT_ACTION" != "" ]; then
 	echo $1 $2 $3
 fi
 CMD="$1"
-shift
+if [ "$CMD" != "" ]; then
+    shift
+fi
 
 if [ "$CONFIGDIR" = "" ]; then
 	CONFIGDIR="$MASTERDIR/config"
